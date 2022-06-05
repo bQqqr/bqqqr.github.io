@@ -5,7 +5,7 @@ slug = "contact"
 
 My email address is me@christoskaltsas.com
 
-If you want to send me a private message, you can download my public key here:
+If you want to send me an encrypted message, you can download my public key here:
 
 ```
 curl -LO https://www.christoskaltsas.com/public.asc
