@@ -1,6 +1,5 @@
 // Fonts
 $font-family: -apple-system,
-monospace,
 BlinkMacSystemFont,
 "Segoe UI",
 Roboto,
@@ -18,21 +17,24 @@ sans-serif;
 $code-font-family: SFMono-Regular,
 Consolas,
 Liberation Mono,
-Menlo;
+Menlo,
+monospace;
 
 // Colors
 $bg-color: #fbf1c7 !default;
 $fg-color: #3c3836 !default;
 $alt-bg-color: #ebdbb2 !default;
 $alt-fg-color: #282828 !default;
-$link-color: #076678 !default;
+$darker-alt-bg-color: #a89984 !default;
+$link-color: #458588 !default;
 
 // Dark colors
-$bg-color-dark: #1d2021 !default;
+$bg-color-dark: #282828 !default;
 $fg-color-dark: #ebdbb2 !default;
-$alt-bg-color-dark: #1d2021!default;
+$alt-bg-color-dark: #1d2021 !default;
 $alt-fg-color-dark: #fbf1c7 !default;
-$link-color-dark: #83a598 !default;
+$lighter-alt-bg-color-dark: #7c6f64 !default;
+$link-color-dark: #458588 !default;
 
 // Notice colors
 $fg-color-notice-note-icon: #5e35b1 !default;

@@ -134,14 +134,11 @@ strong {
   font-weight: 700;
 }
 
-
 .highlight>div,
 .highlight>pre {
-  margin: 0 0 2rem;
+  margin: 2rem 0 2rem;
   padding: 1rem;
   border-radius: 1rem;
-  background: $bg-color-dark !important;
-  color: $fg-color-dark !important;
 }
 
 pre {

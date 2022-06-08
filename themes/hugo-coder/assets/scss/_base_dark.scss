@@ -41,10 +41,10 @@
   // fix color schemes which do not explicitly set fg-color
   .highlight {
     pre {
-      background: $bg-color !important;
-      color: $fg-color !important;
+      color: $fg-color;
     }
   }
+
 
   pre {
     code {
