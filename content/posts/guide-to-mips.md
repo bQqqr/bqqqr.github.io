@@ -16,9 +16,9 @@ tags = [
 People often wonder why they should learn MIPS over x64 and ARM assembly.
 {{< /notice >}}
 
-<div align="center">
-![MIPS meme](/img/mips-meme.jpg "MIPS meme")
-</div>
+<p align="center">
+    <img src="/img/mips-meme.jpg" alt="MIPS meme" />
+</p>
 
 ## :handbag: Registers
 
