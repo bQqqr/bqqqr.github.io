@@ -14,22 +14,32 @@ tags = [
 
 ## :handbag: Registers
 
-### Integer Ones
+Registers have the following usage conventions:
 
-| Symbol  | Actual | Meaning                                   | Usage Conventions          |
-| ------- | ------ | ----------------------------------------- | -------------------------- |
-| $zero   | $0     | Constant Value Zero                       | Preserved Across Calls     |
-| $at     | $1     | Reversed by the Assembler                 | Preserved Across Calls     |
-| $v0-$v1 | $2-3   | Expression Eval & Subprogram Return Value | Not Preserved Across Calls |
-| $a0-$a3 | $4-7   | Arguments                                 | Not Preserved Across Calls |
-| $t0-$t7 | $8-15  | Temporaries                               | Not Preserved Across Calls |
-| $s0-$s7 | $16-23 | Saved Values                              | Preserved Across Calls     |
-| $t8-$t9 | $24-25 | Temporaries                               | Not Preserved Across Calls |
-| $k0-$k1 | $26-27 | Kernel (OS) Registers                     | Dangerous to Use           |
-| $gp     | $28    | Global Pointer                            | Dangerous to Use           |
-| $sp     | $29    | Stack Pointer                             | Dangerous to Use           |
-| $fp     | $30    | Frame Pointer                             | Dangerous to Use           |
-| $ra     | $31    | Return Address                            | Dangerous to Use           |
+- When a register is designated as "preserved across calls", it means that the caller can count on the register having the same contents before and after a subprogram call. If the subprogram uses one of these registers, it should take measures to save the register value before changing it and restore the value before returning.
+- If a register is designated as "not preserved across calls", it means that the caller cannot count on the register having the same contents before and after a subprogram call. Thus the subprogram can use the register freely. If the caller puts a value into one of these registers before a subprogram call and needs the value after the call, then the caller has the responsibility of saving and restoring the value.
+- If a register is designated as "dangerous to use", it means that the register is used either by the operating system or the assembler. Most programs should avoid the use of these registers.
+
+
+| Symbol  | Actual      | Meaning                                   | Usage Conventions          |
+| ------- | ----------- | ----------------------------------------- | -------------------------- |
+| $zero   | $0          | Constant Value Zero                       | Preserved Across Calls     |
+| $at     | $1          | Reversed by the Assembler                 | Preserved Across Calls     |
+| $v0-$v1 | $2-3        | Expression Eval & Subprogram Return Value | Not Preserved Across Calls |
+| $a0-$a3 | $4-7        | Arguments                                 | Not Preserved Across Calls |
+| $t0-$t7 | $8-15       | Temporaries                               | Not Preserved Across Calls |
+| $s0-$s7 | $16-23      | Saved Values                              | Preserved Across Calls     |
+| $t8-$t9 | $24-25      | Temporaries                               | Not Preserved Across Calls |
+| $k0-$k1 | $26-27      | Kernel (OS) Registers                     | Dangerous to Use           |
+| $gp     | $28         | Global Pointer                            | Dangerous to Use           |
+| $sp     | $29         | Stack Pointer                             | Dangerous to Use           |
+| $fp     | $30         | Frame Pointer                             | Dangerous to Use           |
+| $ra     | $31         | Return Address                            | Dangerous to Use           |
+| -       | $f0, $f2    | Floating Point Subprogram Return value    | Not Preserved Across Calls |
+| -       | $f4 - $f10  | Temporaries                               | Not Preserved Across Calls |
+| -       | $f12, $f14  | The First Two Floating Point Parameters   | Not Preserved Across Calls |
+| -       | $f16, $f18  | Temporaries                               | Not Preserved Across Calls |
+| -       | $f20 - $f30 | Saved Values                              | Preserved Across Calls     |
 
 Simple programs should use the following registers:
 - `$zero` for the constant 0.
@@ -37,16 +47,6 @@ Simple programs should use the following registers:
 - `$t0 - $t8$` for subprogram variables
 - `$a0 - $a3$` for subprogram and syscall parameters
 - `$v0, $v1$` for subprogram return values and syscall codes and return values
-
-### Floating-Point Ones
-
-| Register Name | Use                                                                 |
-| ------------- | ------------------------------------------------------------------- |
-| $f0, $f2      | Floating Point Subprogram Return value - Not Preserved Across Calls |
-| $f4 - $f10    | Temporaries - Not Preserved Across Calls                            |
-| $f12, $f14    | The First 2 Floating Point Parameters - Not Preserved Across Calls  |
-| $f16, $f18    | Temporaries - Not Preserved Across Calls                            |
-| $f20 - $f30   | Saved Values - Preserved Across Calls                               |
 
 ## :memo: Instructions
 
@@ -60,43 +60,43 @@ Simple programs should use the following registers:
 | Add Immediate Unsigned      | addiu $1,$2,100     | $1=$2+100         |
 | Multiply (without overflow) | mul   $1,$2,$3      | $1=$2*$3          |
 | Multiply                    | mult  $2,$3         | $hi,$low=$2*$3    |
-| (Floats) Divide             | div   $2,$3         | $hi,$low=$2/$3    |
-| (Floats) Add                | add.s $f0, $f1, $f2 | $f0 := $f1 + $f2  |
-| (Floats) Subtract           | sub.s $f0, $f1, $f2 | $f0 := $f1 - $f2  |
-| (Floats) Multiply           | mul.s $f0, $f1, $f2 | $f0 := $f1 * $f2  |
-| (Floats) Divide             | div.s $f0, $f1, $f2 | $f0 := $f1 / $f2  |
-| (Floats) Abs                | abs.s $f0, $f1      | $f0 :=        $f1 |
-| (Floats) Negative           | neg.s $f0, $f1      | $f0 := -$f1       |
+| (float) Divide              | div   $2,$3         | $hi,$low=$2/$3    |
+| (float) Add                 | add.s $f0, $f1, $f2 | $f0 := $f1 + $f2  |
+| (float) Subtract            | sub.s $f0, $f1, $f2 | $f0 := $f1 - $f2  |
+| (float) Multiply            | mul.s $f0, $f1, $f2 | $f0 := $f1 * $f2  |
+| (float) Divide              | div.s $f0, $f1, $f2 | $f0 := $f1 / $f2  |
+| (float) Abs                 | abs.s $f0, $f1      | $f0 :=        $f1 |
+| (float) Negative            | neg.s $f0, $f1      | $f0 := -$f1       |
 ### Logical
 
 | Instruction         | Example             | Meaning       |
 | ------------------- | ------------------- | ------------- |
-| and                 | and  $1,$2,$3       | $1=$2&$3      |
-| or                  | or   $1,$2,$3 $1=$2 | $3 Bitwise OR |
-| and immediate       | andi $1,$2,100      | $1=$2&100     |
-| or immediate        | or   $1,$2,100      | $1=$2\|100    |
-| shift left logical  | sll  $1,$2,10       | $1=$2<<10     |
-| shift right logical | srl  $1,$2,10       | $1=$2>>10     |
+| And                 | and  $1,$2,$3       | $1=$2&$3      |
+| Or                  | or   $1,$2,$3 $1=$2 | $3 Bitwise OR |
+| And Immediate       | andi $1,$2,100      | $1=$2&100     |
+| Or Immediate        | or   $1,$2,100      | $1=$2\|100    |
+| Shift Left Logical  | sll  $1,$2,10       | $1=$2<<10     |
+| Shift Right Logical | srl  $1,$2,10       | $1=$2>>10     |
 
 ### Data Transfer
 
 | Instruction          | Example           | Meaning                                     |
 | -------------------- | ----------------- | ------------------------------------------- |
-| load word            | lw   $1,100($2)   | $1=Memory[$2+100]                           |
-| store word           | sw   $1,100($2)   | Memory[$2+100]=$1                           |
-| load upper immediate | lui  $1,100       | $1=100x2^16                                 |
-| load address         | la   $1,label     | $1=Address of label                         |
-| load immediate       | li   $1,100       | $1=100                                      |
-| move from hi         | mfhi $2           | $2=hi                                       |
-| move from lo         | mflo $2           | $2=lo                                       |
-| move                 | move $1,$2        | $1=$2                                       |
-| load word            | l.s $f0, 100($t2) | load word into $f0 from address $t2+100     |
-| store word           | s.s $f0, 100($t2) | store word from $f0 into address $t2+100    |
-| move                 | mov.s $f0, $f2    | move between FP registers                   |
-| move from            | mfc1 $t1, $f2     | move from FP registers (no conversion)      |
-| move to              | mtc1 $t1, $f2     | move to FP registers (no conversion)        |
-| convert to integer   | cvt.w.s $f2, $f4  | convert from single precision FP to integer |
-| convert from integer | cvt.s.w $f2, $f4  | convert from integer to single precision FP |
+| Load Word            | lw   $1,100($2)   | $1=Memory[$2+100]                           |
+| store Word           | sw   $1,100($2)   | Memory[$2+100]=$1                           |
+| Load Upper Immediate | lui  $1,100       | $1=100x2^16                                 |
+| Load Address         | la   $1,label     | $1=Address of label                         |
+| Load Immediate       | li   $1,100       | $1=100                                      |
+| Move From hi         | mfhi $2           | $2=hi                                       |
+| Move From lo         | mflo $2           | $2=lo                                       |
+| Move                 | move $1,$2        | $1=$2                                       |
+| Load Word            | l.s $f0, 100($t2) | Load word into $f0 from address $t2+100     |
+| Store Word           | s.s $f0, 100($t2) | Store word from $f0 into address $t2+100    |
+| Move                 | mov.s $f0, $f2    | Move between FP registers                   |
+| Move From            | mfc1 $t1, $f2     | Move from FP registers (no conversion)      |
+| Move to              | mtc1 $t1, $f2     | Move to FP registers (no conversion)        |
+| Convert to Integer   | cvt.w.s $f2, $f4  | Convert from single precision FP to integer |
+| Convert from Integer | cvt.s.w $f2, $f4  | Convert from integer to single precision FP |
 
 ### Conditional Branch
 
