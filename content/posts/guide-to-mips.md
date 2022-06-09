@@ -12,6 +12,14 @@ tags = [
 
 # :robot: MIPS
 
+{{< notice note >}}
+People often wonder why they should learn MIPS over x64 and ARM assembly.
+{{< /notice >}}
+
+<div align="center">
+![MIPS meme](/img/mips-meme.jpg "MIPS meme")
+</div>
+
 ## :handbag: Registers
 
 Registers have the following usage conventions:
@@ -23,25 +31,25 @@ Registers have the following usage conventions:
 - If a register is designated as **dangerous to use**, it means that the register is used either by the operating system or the assembler. Most programs should avoid the use of these registers.
 
 
-| Symbol    | Actual       | Meaning                                   | Usage Conventions          |
-| --------- | ------------ | ----------------------------------------- | -------------------------- |
-| `$zero`   | `$0`         | Constant Value Zero                       | Preserved Across Calls     |
-| `$at`     | `$1`         | Reversed by the Assembler                 | Preserved Across Calls     |
-| `$v0-$v1` | `$2-3`       | Expression Eval & Subprogram Return Value | Not Preserved Across Calls |
-| `$a0-$a3` | `$4-7`       | Arguments                                 | Not Preserved Across Calls |
-| `$t0-$t7` | `$8-15`      | Temporaries                               | Not Preserved Across Calls |
-| `$s0-$s7` | `$16-23`     | Saved Values                              | Preserved Across Calls     |
-| `$t8-$t9` | `$24-25`     | Temporaries                               | Not Preserved Across Calls |
-| `$k0-$k1` | `$26-27`     | Kernel (OS) Registers                     | Dangerous to Use           |
-| `$gp`     | `$28`        | Global Pointer                            | Dangerous to Use           |
-| `$sp`     | `$29`        | Stack Pointer                             | Dangerous to Use           |
-| `$fp`     | `$30`        | Frame Pointer                             | Dangerous to Use           |
-| `$ra`     | `$31`        | Return Address                            | Dangerous to Use           |
-| -         | `$f0, $f2`   | Floating Point Subprogram Return value    | Not Preserved Across Calls |
-| -         | `$f4-$f10`   | Temporaries                               | Not Preserved Across Calls |
-| -         | `$f12, $f14` | The First Two Floating Point Parameters   | Not Preserved Across Calls |
-| -         | `$f16, $f18` | Temporaries                               | Not Preserved Across Calls |
-| -         | `$f20-$f30`  | Saved Values                              | Preserved Across Calls     |
+| Symbol    | Actual       | Meaning                 | Usage Conventions |
+| --------- | ------------ | ----------------------- | ----------------- |
+| `$zero`   | `$0`         | Constant Value Zero     | Preserved         |
+| `$at`     | `$1`         | Assembler's Register    | Preserved         |
+| `$v0-$v1` | `$2-3`       | Syscalls & Return Value | Not Preserved     |
+| `$a0-$a3` | `$4-7`       | Arguments               | Not Preserved     |
+| `$t0-$t7` | `$8-15`      | Temporaries             | Not Preserved     |
+| `$s0-$s7` | `$16-23`     | Saved Values            | Preserved         |
+| `$t8-$t9` | `$24-25`     | Temporaries             | Not Preserved     |
+| `$k0-$k1` | `$26-27`     | OS Registers            | Dangerous         |
+| `$gp`     | `$28`        | Global Pointer          | Dangerous         |
+| `$sp`     | `$29`        | Stack Pointer           | Dangerous         |
+| `$fp`     | `$30`        | Frame Pointer           | Dangerous         |
+| `$ra`     | `$31`        | Return Address          | Dangerous         |
+| -         | `$f0, $f2`   | FP Return value         | Not Preserved     |
+| -         | `$f4-$f10`   | Temporaries             | Not Preserved     |
+| -         | `$f12, $f14` | FP Arguments            | Not Preserved     |
+| -         | `$f16, $f18` | Temporaries             | Not Preserved     |
+| -         | `$f20-$f30`  | Saved Values            | Preserved         |
 
 Simple programs should use the following registers:
 - `$zero` for the constant 0.
@@ -52,84 +60,84 @@ Simple programs should use the following registers:
 
 ## :memo: Instructions
 
-| Instruction                 | Example               | Meaning               |
-| --------------------------- | --------------------- | --------------------- |
-| Add                         | `add   $1,  $2,  $3`  | `$1 = $2 + $3`        |
-| Subtract                    | `sub   $1,  $2,  $3`  | `$1 = $2 - $3`        |
-| Add Immediate               | `addi  $1,  $2,  100` | `$1 = $2 + 100`       |
-| Add Unsigned                | `addu  $1,  $2,  $3 ` | `$1 = $2 + $3`        |
-| Subtract Unsigned           | `subu  $1,  $2,  $3 ` | `$1 = $2 - $3`        |
-| Add Immediate Unsigned      | `addiu $1,  $2,  100` | `$1 = $2 + 100`       |
-| Multiply (without overflow) | `mul   $1,  $2,  $3 ` | `$1 = $2 * $3`        |
-| Multiply                    | `mult  $2,  $3`       | `$hi, $low = $2 * $3` |
-| (float) Divide              | `div   $2,  $3`       | `$hi, $low = $2 / $3` |
-| (float) Add                 | `add.s $f0, $f1, $f2` | `$f0 :=  $f1 + $f2 `  |
-| (float) Subtract            | `sub.s $f0, $f1, $f2` | `$f0 :=  $f1 - $f2 `  |
-| (float) Multiply            | `mul.s $f0, $f1, $f2` | `$f0 :=  $f1 * $f2 `  |
-| (float) Divide              | `div.s $f0, $f1, $f2` | `$f0 :=  $f1 / $f2 `  |
-| (float) Abs                 | `abs.s $f0, $f1`      | `$f0 :=  $f1      `   |
-| (float) Negative            | `neg.s $f0, $f1`      | `$f0 := -$f1      `   |
+| Instruction             | Example               | Meaning               |
+| ----------------------- | --------------------- | --------------------- |
+| Add                     | `add   $1,  $2,  $3`  | `$1 = $2 + $3`        |
+| Subtract                | `sub   $1,  $2,  $3`  | `$1 = $2 - $3`        |
+| Add Immediate           | `addi  $1,  $2,  100` | `$1 = $2 + 100`       |
+| Add Unsigned            | `addu  $1,  $2,  $3 ` | `$1 = $2 + $3`        |
+| Subtract Unsigned       | `subu  $1,  $2,  $3 ` | `$1 = $2 - $3`        |
+| Add Immediate Unsigned  | `addiu $1,  $2,  100` | `$1 = $2 + 100`       |
+| Multiply (/wo overflow) | `mul   $1,  $2,  $3 ` | `$1 = $2 * $3`        |
+| Multiply                | `mult  $2,  $3`       | `$hi, $low = $2 * $3` |
+| (float) Divide          | `div   $2,  $3`       | `$hi, $low = $2 / $3` |
+| (float) Add             | `add.s $f0, $f1, $f2` | `$f0 :=  $f1 + $f2 `  |
+| (float) Subtract        | `sub.s $f0, $f1, $f2` | `$f0 :=  $f1 - $f2 `  |
+| (float) Multiply        | `mul.s $f0, $f1, $f2` | `$f0 :=  $f1 * $f2 `  |
+| (float) Divide          | `div.s $f0, $f1, $f2` | `$f0 :=  $f1 / $f2 `  |
+| (float) Abs             | `abs.s $f0, $f1`      | `$f0 :=  $f1      `   |
+| (float) Negative        | `neg.s $f0, $f1`      | `$f0 := -$f1      `   |
 ### Logical
 
-| Instruction         | Example          | Meaning           |
-| ------------------- | ---------------- | ----------------- |
-| And                 | `and  $1,$2,$3`  | `$1 = $2 & $3`    |
-| Or                  | `or   $1,$2,$3`  | `$1 = $2 \| $3`   |
-| And Immediate       | `andi $1,$2,100` | `$1 = $2 &  100 ` |
-| Or Immediate        | `or   $1,$2,100` | `$1 = $2 \| 100`  |
-| Shift Left Logical  | `sll  $1,$2,10`  | `$1 = $2 << 10 `  |
-| Shift Right Logical | `srl  $1,$2,10`  | `$1 = $2 >> 10 `  |
+| Instruction   | Example          | Meaning           |
+| ------------- | ---------------- | ----------------- |
+| And           | `and  $1,$2,$3`  | `$1 = $2 & $3`    |
+| Or            | `or   $1,$2,$3`  | `$1 = $2 \| $3`   |
+| And Immediate | `andi $1,$2,100` | `$1 = $2 &  100 ` |
+| Or Immediate  | `or   $1,$2,100` | `$1 = $2 \| 100`  |
+| Shift Left    | `sll  $1,$2,10`  | `$1 = $2 << 10 `  |
+| Shift Right   | `srl  $1,$2,10`  | `$1 = $2 >> 10 `  |
 
 ### Data Transfer
 
-| Instruction          | Example               | Meaning                                      |
-| -------------------- | --------------------- | -------------------------------------------- |
-| Load Word            | `lw    $1, 100($2)`   | `$1=Memory[$2+100]`                          |
-| store Word           | `sw    $1, 100($2)`   | `Memory[$2+100]=$1`                          |
-| Load Upper Immediate | `lui   $1, 100    `   | `$1=100x2^16`                                |
-| Load Address         | `la    $1, label  `   | `$1=Address of label`                        |
-| Load Immediate       | `li    $1, 100    `   | `$1=100`                                     |
-| Move From hi         | `mfhi  $2`            | `$2=hi`                                      |
-| Move From lo         | `mflo  $2`            | `$2=lo`                                      |
-| Move                 | `move  $1, $2`        | `$1=$2`                                      |
-| Load Word            | `l.s   $f0, 100($t2)` | Load word into `$f0` from address `$t2+100`  |
-| Store Word           | `s.s   $f0, 100($t2)` | Store word from `$f0` into address `$t2+100` |
-| Move                 | `mov.s $f0, $f2`      | Move between FP registers                    |
-| Move From            | `mfc1  $t1, $f2`      | Move from FP registers (no conversion)       |
-| Move to              | `mtc1  $t1, $f2`      | Move to FP registers (no conversion)         |
-| Convert to Integer   | `cvt.w.s $f2, $f4 `   | Convert from single precision FP to integer  |
-| Convert from Integer | `cvt.s.w $f2, $f4 `   | Convert from integer to single precision FP  |
+| Instruction          | Example               | Meaning                                   |
+| -------------------- | --------------------- | ----------------------------------------- |
+| Load Word            | `lw    $1, 100($2)`   | `$1=Memory[$2+100]`                       |
+| store Word           | `sw    $1, 100($2)`   | `Memory[$2+100]=$1`                       |
+| Load Upper Immediate | `lui   $1, 100    `   | `$1=100x2^16`                             |
+| Load Address         | `la    $1, label  `   | `$1=Address of label`                     |
+| Load Immediate       | `li    $1, 100    `   | `$1=100`                                  |
+| Move From hi         | `mfhi  $2`            | `$2=hi`                                   |
+| Move From lo         | `mflo  $2`            | `$2=lo`                                   |
+| Move                 | `move  $1, $2`        | `$1=$2`                                   |
+| Load Word            | `l.s   $f0, 100($t2)` | Load word into `$f0` from addr `$t2+100`  |
+| Store Word           | `s.s   $f0, 100($t2)` | Store word from `$f0` into addr `$t2+100` |
+| Move                 | `mov.s $f0, $f2`      | Move between FP registers                 |
+| Move From            | `mfc1  $t1, $f2`      | Move from FP registers (no conversion)    |
+| Move to              | `mtc1  $t1, $f2`      | Move to FP registers (no conversion)      |
+| Convert to Integer   | `cvt.w.s $f2, $f4 `   | Convert from single FP to int             |
+| Convert from Integer | `cvt.s.w $f2, $f4 `   | Convert from int to single FP             |
 
 ### Conditional Branch
 
-| Instruction                     | Example           | Meaning                                     |
-| ------------------------------- | ----------------- | ------------------------------------------- |
-| branch on equal                 | `beq $1,$2,100`   | `if true goto PC+4+100`                     |
-| branch on not equal             | `bne $1,$2,100`   | `if true goto PC+4+100`                     |
-| branch on greater than          | `bgt $1,$2,100`   | `if true goto PC+4+100`                     |
-| branch on greater than or equal | `bge $1,$2,100`   | `if true goto PC+4+100`                     |
-| branch on less than             | `blt $1,$2,100`   | `if true goto PC+4+100`                     |
-| branch on less than or equal    | `ble $1,$2,100`   | `if true goto PC+4+100`                     |
-| compare equal                   | `c.eq.s $f2, $f4` | `if $f2 == $f4 then code = 1 else code = 0` |
-| compare less or equal           | `c.le.s $f2, $f4` | `if $f2 <= $f4 then code = 1 else code = 0` |
-| compare larger than             | `c.lt.s $f2, $f4` | `if $f2 < $f4 then code = 1 else code = 0`  |
-| branch on false                 | `bc1f label`      | `if code == 0 then jump to label`           |
-| branch on true                  | `bc1t label`      | `if code == 1 then jump to label`           |
+| Instruction  | Example           | Meaning                                     |
+| ------------ | ----------------- | ------------------------------------------- |
+| Branch on == | `beq $1,$2,100`   | `if true goto PC+4+100`                     |
+| Branch on != | `bne $1,$2,100`   | `if true goto PC+4+100`                     |
+| Branch on >  | `bgt $1,$2,100`   | `if true goto PC+4+100`                     |
+| Branch on >= | `bge $1,$2,100`   | `if true goto PC+4+100`                     |
+| Branch on <  | `blt $1,$2,100`   | `if true goto PC+4+100`                     |
+| Branch on <= | `ble $1,$2,100`   | `if true goto PC+4+100`                     |
+| Compare ==   | `c.eq.s $f2, $f4` | `if $f2 == $f4 then code = 1 else code = 0` |
+| Compare <=   | `c.le.s $f2, $f4` | `if $f2 <= $f4 then code = 1 else code = 0` |
+| Compare >    | `c.lt.s $f2, $f4` | `if $f2 < $f4 then code = 1 else code = 0`  |
+| Branch on 0  | `bc1f label`      | `if code == 0 then jump to label`           |
+| Branch on 1  | `bc1t label`      | `if code == 1 then jump to label`           |
 
 ### Comparison
 
-| Instruction                | Example            | Meaning                            |
-| -------------------------- | ------------------ | ---------------------------------- |
-| set on less than           | `slt  $1, $2, $3`  | `if($2 < $3)  $1 = 1; else $1 = 0` |
-| set on less than immediate | `slti $1, $2, 100` | `if($2 < 100) $1 = 1; else $1 = 0` |
+| Instruction        | Example            | Meaning                            |
+| ------------------ | ------------------ | ---------------------------------- |
+| Set on <           | `slt  $1, $2, $3`  | `if($2 < $3)  $1 = 1; else $1 = 0` |
+| Set on < Immediate | `slti $1, $2, 100` | `if($2 < 100) $1 = 1; else $1 = 0` |
 
 ### Unconditional Jump
 
 | Instruction   | Example    | Meaning                         |
 | ------------- | ---------- | ------------------------------- |
-| jump          | `j 1000`   | Go to address 1000              |
-| jump register | `jr $1`    | Go to address stored in `$1`    |
-| jump and link | `jal 1000` | `$ra = PC+4` Go to address 1000 |
+| Jump          | `j 1000`   | Go to address 1000              |
+| Jump Register | `jr $1`    | Go to address stored in `$1`    |
+| Jump and Link | `jal 1000` | `$ra = PC+4` Go to address 1000 |
 
 ### System Calls
 
