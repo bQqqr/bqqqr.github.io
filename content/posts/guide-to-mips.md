@@ -1,13 +1,12 @@
 +++
 author = "Christos Kaltsas"
-title = "OSCP 0x1 - Nmap"
+title = "A Guide To MIPS"
 date = "2022-06-08"
-description = "An attempt to deconstruct nmap's complex usage."
+description = "A dive into MIPS core concepts."
 tags = [
-    "cheatsheet",
-    "nmap",
-    "ports-scanning",
-    "oscp"
+    "guide",
+    "assembly",
+    "mips"
 ]
 +++
 
