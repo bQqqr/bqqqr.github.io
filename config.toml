@@ -1,6 +1,6 @@
 baseURL = "www.christoskaltsas.com"
 title = "Christos Kaltsas's Webpage"
-theme = "hugo-coder"
+theme = "coder"
 languageCode = "en"
 defaultContentLanguage = "en"
 paginate = 20
