@@ -14,7 +14,7 @@ enableEmoji = true
 [params]
 author = "Christos Kaltsas"
 license = '<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">CC BY-ND 4.0</a>'
-description = "Christos Kaltsas's personal website"
+description = "Christos Kaltsas's Personal Website"
 keywords = "blog,developer,personal"
 avatarURL = "img/avatar.jpg"
 # gravatar = "me@christoskaltsas.com"
