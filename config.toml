@@ -16,7 +16,6 @@ author = "Christos Kaltsas"
 license = '<a rel="license" href="http://creativecommons.org/licenses/by-nd/4.0/">CC BY-ND 4.0</a>'
 description = "Christos Kaltsas's personal website"
 keywords = "blog,developer,personal"
-info = ["OSCP Student", "Full Stack Developer"]
 avatarURL = "img/avatar.jpg"
 # gravatar = "me@christoskaltsas.com"
 dateFormat = "January 2, 2006"
@@ -112,11 +111,11 @@ url = "https://github.com/bQqqr/"
 # weight = 2
 # url = "https://gitlab.com/johndoe/"
 
-# [[params.social]]
-# name = "Twitter"
-# icon = "fa fa-2x fa-twitter"
-# weight = 3
-# url = "https://twitter.com/johndoe/"
+[[params.social]]
+name = "Twitter"
+icon = "fa fa-2x fa-twitter"
+weight = 3
+url = "https://twitter.com/bQqqr_/"
 
 [[params.social]]
 name = "LinkedIn"

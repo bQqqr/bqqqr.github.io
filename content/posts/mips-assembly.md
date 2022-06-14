@@ -1,6 +1,6 @@
 +++
 author = "Christos Kaltsas"
-title = "A Guide To MIPS"
+title = "MIPS Assembly"
 date = "2022-06-09"
 description = "A dive into MIPS core concepts."
 tags = [
@@ -11,22 +11,22 @@ tags = [
 +++
 
 
-- [MIPS](#mips)
-  - [Registers](#registers)
-  - [Instructions](#instructions)
-    - [Arithmetic](#arithmetic)
-    - [Logical](#logical)
-    - [Data Transfer](#data-transfer)
-    - [Conditional Branch](#conditional-branch)
-    - [Comparison](#comparison)
-    - [Unconditional Jump](#unconditional-jump)
-    - [System Calls](#system-calls)
-    - [Assembly Directives](#assembly-directives)
-  - [Methodology](#methodology)
-    - [Calling Conventions](#calling-conventions)
-    - [If Else](#if-else)
+- [🤖 MIPS](#-mips)
+  - [💼 Registers](#-registers)
+  - [🗣️ Instructions](#-instructions)
+    - [🔢 Arithmetic](#arithmetic)
+    - [🤔 Logical](#logical)
+    - [🚂 Data Transfer](#data-transfer)
+    - [🛣️ Conditional Branch](#conditional-branch)
+    - [⚖️ Comparison](#comparison)
+    - [🦘 Unconditional Jump](#unconditional-jump)
+    - [🩲 System Calls](#system-calls)
+    - [🔠 Assembly Directives](#assembly-directives)
+  - [⚒️ Methodology](#methodology)
+    - [📞 Calling Conventions](#calling-conventions)
+    - [💭 If Else](#if-else)
 
-# MIPS
+# 🤖 MIPS
 
 MIPS is often used for pedagogical purposes in universities because it has a clean and small implementation. Also, it is a stepping stone to learning other major assembly languages such as ARM.
 
@@ -34,7 +34,7 @@ Let's dive into the details!
 
 ![MIPS meme](/img/mips.gif "MIPS meme")
 
-## Registers
+## 💼 Registers
 
 Registers have the following usage conventions:
 
@@ -45,25 +45,25 @@ Registers have the following usage conventions:
 - If a register is designated as **dangerous to use**, it means that the register is used either by the operating system or the assembler.
 
 ```txt
-| Symbol    | Actual       | Meaning                 | Usage Conventions |
-| --------- | ------------ | ----------------------- | ----------------- |
-| `$zero`   | `$0`         | Constant Value Zero     | Preserved         |
-| `$at`     | `$1`         | Assembler's Register    | Preserved         |
-| `$v0-$v1` | `$2-3`       | Syscalls & Return Value | Not Preserved     |
-| `$a0-$a3` | `$4-7`       | Arguments               | Not Preserved     |
-| `$t0-$t7` | `$8-15`      | Temporaries             | Not Preserved     |
-| `$s0-$s7` | `$16-23`     | Saved Values            | Preserved         |
-| `$t8-$t9` | `$24-25`     | Temporaries             | Not Preserved     |
-| `$k0-$k1` | `$26-27`     | OS Registers            | Dangerous         |
-| `$gp`     | `$28`        | Global Pointer          | Dangerous         |
-| `$sp`     | `$29`        | Stack Pointer           | Dangerous         |
-| `$fp`     | `$30`        | Frame Pointer           | Dangerous         |
-| `$ra`     | `$31`        | Return Address          | Dangerous         |
-| -         | `$f0, $f2`   | FP Return value         | Not Preserved     |
-| -         | `$f4-$f10`   | Temporaries             | Not Preserved     |
-| -         | `$f12, $f14` | FP Arguments            | Not Preserved     |
-| -         | `$f16, $f18` | Temporaries             | Not Preserved     |
-| -         | `$f20-$f30`  | Saved Values            | Preserved         |
+| Symbol  | Actual     | Meaning                 | Usage Conventions |
+| ------- | ---------- | ----------------------- | ----------------- |
+| $zero   | $0         | Constant Value Zero     | Preserved         |
+| $at     | $1         | Assembler's Register    | Preserved         |
+| $v0-$v1 | $2-3       | Syscalls & Return Value | Not Preserved     |
+| $a0-$a3 | $4-7       | Arguments               | Not Preserved     |
+| $t0-$t7 | $8-15      | Temporaries             | Not Preserved     |
+| $s0-$s7 | $16-23     | Saved Values            | Preserved         |
+| $t8-$t9 | $24-25     | Temporaries             | Not Preserved     |
+| $k0-$k1 | $26-27     | OS Registers            | Dangerous         |
+| $gp     | $28        | Global Pointer          | Dangerous         |
+| $sp     | $29        | Stack Pointer           | Dangerous         |
+| $fp     | $30        | Frame Pointer           | Dangerous         |
+| $ra     | $31        | Return Address          | Dangerous         |
+| -       | $f0, $f2   | FP Return value         | Not Preserved     |
+| -       | $f4-$f10   | Temporaries             | Not Preserved     |
+| -       | $f12, $f14 | FP Arguments            | Not Preserved     |
+| -       | $f16, $f18 | Temporaries             | Not Preserved     |
+| -       | $f20-$f30  | Saved Values            | Preserved         |
 ```
 
 Simple programs should use the following registers:
@@ -73,9 +73,9 @@ Simple programs should use the following registers:
 - `$a0 - $a3$` for subprogram and syscall parameters
 - `$v0, $v1$` for subprogram return values and syscall codes and return values
 
-##  Instructions
+## 🗣️ Instructions
 
-###  Arithmetic
+###  🔢 Arithmetic
 ```
 | Instruction             | Example             | Meaning             |
 | ----------------------- | ------------------- | ------------------- |
@@ -96,7 +96,7 @@ Simple programs should use the following registers:
 | (float) Negative        | neg.s $f0, $f1      | $f0 := -$f1         |
 ```
 
-###  Logical
+### 🤔 Logical
 
 ```
 | Instruction   | Example        | Meaning        |
@@ -109,7 +109,7 @@ Simple programs should use the following registers:
 | Shift Right   | srl  $1,$2,10  | $1 = $2 >> 10  |
 ```
 
-###  Data Transfer
+### 🚂 Data Transfer
 
 ```
 | Instruction          | Example             | Meaning                                |
@@ -131,7 +131,7 @@ Simple programs should use the following registers:
 | Convert from Integer | cvt.s.w $f2, $f4    | Convert from int to single FP          |
 ```
 
-###  Conditional Branch
+### 🛣️ Conditional Branch
 
 ```
 | Instruction  | Example         | Meaning                                   |
@@ -149,7 +149,7 @@ Simple programs should use the following registers:
 | Branch on 1  | bc1t label      | if code == 1 then jump to label           |
 ```
 
-###  Comparison
+### ⚖️ Comparison
 
 ```
 | Instruction        | Example          | Meaning                          |
@@ -158,7 +158,7 @@ Simple programs should use the following registers:
 | Set on < Immediate | slti $1, $2, 100 | if($2 < 100) $1 = 1; else $1 = 0 |
 ```
 
-###  Unconditional Jump
+### 🦘 Unconditional Jump
 
 ```
 | Instruction   | Example  | Meaning                       |
@@ -168,7 +168,7 @@ Simple programs should use the following registers:
 | Jump and Link | jal 1000 | $ra = PC+4 Go to address 1000 |
 ```
 
-###  System Calls
+### 🩲 System Calls
 
 ```
 | Service      | Operation             | v0  | Arguments                       | Results      |
@@ -188,7 +188,7 @@ Simple programs should use the following registers:
 | exit2        | Exits /w return code. | 17  | $a0 = return code               | None         |
 ```
 
-###  Assembly Directives
+### 🔠 Assembly Directives
 
 ```
 | Directive         | Result                                                     |
@@ -202,9 +202,9 @@ Simple programs should use the following registers:
 | .align n          | Align the next datum on a 2^n byte boundary.               |
 ```
 
-## Methodology
+## ⚒️ Methodology
 
-### Calling Conventions
+### 📞 Calling Conventions
 
 {{< tabgroup >}}
   {{< tab name="Caller Store" >}}
@@ -280,7 +280,7 @@ Simple programs should use the following registers:
   {{< /tab >}}
 {{< /tabgroup >}}
 
-### If Else
+### 💭 If Else
 
 {{< tabgroup >}}
   {{< tab name="Dennis's C" >}}

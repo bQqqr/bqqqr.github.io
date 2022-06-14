@@ -1,16 +1,26 @@
 +++
 author = "Christos Kaltsas"
-title = "OSCP 0x1 - Nmap"
+title = "OSCP Cheatsheets - Nmap"
 date = "2022-06-08"
 description = "An attempt to deconstruct nmap's complex usage."
 tags = [
     "cheatsheet",
     "nmap",
-    "ports-scanning",
+    "enumeration",
     "oscp"
 ]
 +++
 
+- [🕵️ Nmap](#️-nmap)
+  - [🎯 Target Specification](#-target-specification)
+  - [🧰 Scan Techniques](#-scan-techniques)
+  - [🚪 Port Specificaton](#-port-specificaton)
+  - [🔍 Version Detection](#-version-detection)
+  - [🔍 OS Detection](#-os-detection)
+  - [⏰ Timing and Perfomance](#-timing-and-perfomance)
+  - [🤖 NSE Scripts](#-nse-scripts)
+  - [📝 Output](#-output)
+  - [💡 Useful Combinations](#-useful-combinations)
 
 # 🕵️ Nmap
 Nmap was designed to rapidly scan large networks, but works fine against single hosts.
@@ -41,7 +51,7 @@ Firstly, you must choose your targets.
 - Scan using an input file.  
 `nmap -iL targets.txt`
 
-## 🔍 Scan Techniques
+## 🧰 Scan Techniques
 
 Secondly, you must select how nmap scans the targets.
 
@@ -49,13 +59,13 @@ Secondly, you must select how nmap scans the targets.
 Always scan with SYN and UDP unless you have not root access.
 {{< /notice >}}
 
-- Scan using SYN technique.
+- Scan using SYN technique.  
 `sudo nmap 192.168.1.1 -sS`
 
-- Scan using TCP techique.
+- Scan using TCP techique.  
 `sudo nmap 192.168.1.1 -sT`  
 
-- Scan using UDP technique. 
+- Scan using UDP technique.   
 `sudo nmap 192.168.1.1 -sU`
 
 ## 🚪 Port Specificaton
@@ -77,7 +87,7 @@ Now, you must specify the ports, that nmap will scan.
 - Scan multiple UDP and TCP ports.  
 `nmap 192.168.1.1 -p U:53, T:21-25,80`
 
-## ⚙️ Services and Version Detection
+## 🔍 Version Detection
 
 Afterwards, you must specify how nmap detects a service's version.
 
@@ -88,7 +98,7 @@ Afterwards, you must specify how nmap detects a service's version.
 `nmap 192.168.1.1 -sV --version-all`
 
 
-## 🖥️ OS Detection
+## 🔍 OS Detection
 
 You might also want to detect the target's Operating System.
 
@@ -99,7 +109,7 @@ You might also want to detect the target's Operating System.
 `nmap 192.168.1.1 -A`
 
 
-## ⏱️ Timing and Perfomance
+## ⏰ Timing and Perfomance
 
 Depending on your network bandwidth, you may optimize nmap accordingly. 
 
@@ -124,23 +134,7 @@ Automate a variety of networking tasks using NSE lua scripts.
 - Scan with multiple scripts using a wildcard.  
 `nmap 192.168.1.1 --script=http*`
 
-NSE scripts define a list of categories they belong to:
-- `auth`, which use brute force attacks to determine credentials.
-- `broadcast` which do discovery of hosts not listed on the cmd by broadcasting on the local network.
-- `brute` which use brute force attacks to guess authentication credentials of a remote server.
-- `default` which are useful, fast verbosed, reliable, instrusive and private.
-- `discovery` which try to actively discover more about the network by querying public registries.
-- `dos` which may cause a denial of service.
-- `exploit` which aim to actively exploit some vulnerability.
-- `external` which may send data to a third-party database or other network resource.
-- `fuzzer` which are designed to send server software unexpected or randomized fields.
--  `intrusive` which are basically unsafe.
--  `malware` which test whether the target platform is infected by malware or backdoors.  
-- `safe` which are safe :).
--  `version` which are used for version detection.
-- `vuln` which check for specific known vulnerabilities.
-
-## 🗒️ Output
+## 📝 Output
 
 It's is really important to select carefully the nmap's output options.
 
@@ -156,13 +150,14 @@ It's is really important to select carefully the nmap's output options.
 - Save all output formats at once.  
 `nmap 192.168.1.1 -oA nmap_results`
 
-
 ## 💡 Useful Combinations
+
+- Using nmap to perform a complete first scan to a known target.  
+`sudo nmap -Pn -sS -sC -sV -p- -oA nmap_results 192.168.1.1`
 
 - Using nmap to perform a combined UDP and SYN scan to a known target.  
 `sudo nmap -Pn -sS -sU 192.168.1.1`
 
 
 - Using nmap to perform a network sweep and enumerate live hosts.  
-`nmap -sn 192.168.1.1-255 -oG grepable.txt`  
-`cat grepable.txt | cut -d' ' -f2 | grep 192 > live_hosts.txt`
+`nmap -sn 192.168.1.1-255 -oG grepable.txt`
