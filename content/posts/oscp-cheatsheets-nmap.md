@@ -11,7 +11,7 @@ tags = [
 ]
 +++
 
-- [🕵️ Nmap](#️-nmap)
+- [🕵️ Nmap](#-nmap)
   - [🎯 Target Specification](#-target-specification)
   - [🧰 Scan Techniques](#-scan-techniques)
   - [🚪 Port Specificaton](#-port-specificaton)
@@ -22,12 +22,14 @@ tags = [
   - [📝 Output](#-output)
   - [💡 Useful Combinations](#-useful-combinations)
 
-# 🕵️ Nmap
+# ️🕵️ Nmap
 Nmap was designed to rapidly scan large networks, but works fine against single hosts.
 
 {{< notice warning >}}
 Invoking network scan techniques on systems, hosts or network ranges other than those under the own responsibility is illegal in quite a few jurisdictions. 
 {{< /notice >}}
+
+![NMAP Cat Meme](/img/nmap.gif#center)
 
 ## 🎯 Target Specification
 
